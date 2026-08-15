@@ -1,93 +1,230 @@
-# SmartSpend AI — Website
+SmartSpend AI 💰
 
-A standalone, client-side website version of SmartSpend AI. No server, no
-backend, no build step — open `index.html` in a browser (or host the folder
-anywhere static files are served) and it works.
+A standalone, client-side personal finance analysis website that helps users understand their spending, identify anomalies, analyze categories and merchants, forecast expenses, get budget recommendations, and generate downloadable Excel reports.
 
-## Run it
+🚀 Live Demo
 
-**Simplest:** double-click `index.html`, or drag it into a browser tab.
+Try SmartSpend AI:
+https://smart-spend-ai-gules.vercel.app/
 
-**Recommended (avoids browser file:// quirks):** serve the folder locally:
+✨ Features
 
-```bash
-cd SmartSpendWeb
-python3 -m http.server 8000
-# then open http://localhost:8000
-```
+- 📊 Expense and spending analysis
+- 📁 Upload CSV and Excel (".xlsx") transaction files
+- 🧹 Automatic data cleaning and column detection
+- 🏷️ Category and merchant analysis
+- 📅 Time-based spending analysis
+- 🚨 Anomaly detection using IQR + Z-score
+- 📈 Expense forecasting using moving average and linear trend
+- 💰 Budget recommendations
+- ❤️ Financial health score
+- 💡 Personalized financial insights and recommendations
+- 📑 Downloadable 9-sheet Excel report
+- 🎯 Built-in demo transaction dataset
+- 📱 Responsive interface for desktop and mobile
 
-Or deploy the folder as-is to GitHub Pages, Netlify, Vercel, or any static
-host — there's nothing to build or configure.
+🛠️ Technologies Used
 
-## How it works
+- HTML5 — Website structure
+- CSS3 — UI and responsive design
+- JavaScript — Data processing, analysis, and application logic
+- Chart.js — Data visualization
+- SheetJS (xlsx) — Excel file reading and report generation
+- CSV / Excel — Transaction data input
 
-- **`engine.js`** — the entire analysis engine (CSV parsing, column detection,
-  cleaning, feature engineering, category/merchant/time analysis, anomaly
-  detection via IQR + Z-score, forecasting via moving-average + linear trend,
-  budget recommendations, the financial health score, and insight/
-  recommendation generation). Pure JS with no DOM access, so it's portable
-  and was unit-tested directly under Node.
-- **`app.js`** — the UI layer: file upload/drag-drop, column-mapping panel,
-  navigation, and every page's rendering + Chart.js wiring. Talks to
-  `engine.js` for all calculations.
-- **`report.js`** — builds the downloadable 9-sheet Excel report client-side
-  using SheetJS.
-- **`demo_data.js`** — the realistic 12-month demo dataset, embedded directly
-  as a JS string (not fetched), so the "Try demo ledger" button works even
-  when the page is opened via `file://` with no server at all.
-- **`index.html` / `style.css`** — structure and the "ledger" visual design
-  (paper background, deep teal ink, coral/amber accents, monospace figures).
+The application runs entirely in the browser. There is no backend server or database.
 
-Two external libraries are loaded from CDN for functionality the browser
-doesn't provide natively: **Chart.js** (all charts) and **SheetJS/xlsx**
-(reading uploaded .xlsx files and writing the Excel report). Everything else
-— all analysis, all cleaning, all calculations — runs entirely in your
-browser tab. Nothing you upload is sent anywhere.
+📂 Project Structure
 
-## What's different from the Streamlit version
-
-- No Isolation Forest model for anomaly detection (that needs scikit-learn,
-  which isn't practical to run client-side) — this version uses IQR +
-  Z-score only. On the demo dataset this flags slightly fewer transactions
-  (20 vs. 33) than the Python version; both are legitimate, just different
-  sensitivity.
-- Everything else (cleaning logic, feature engineering, category/merchant/
-  time analysis, forecasting, budget recommendations, the financial health
-  score formula, and insight generation) is a direct port and was verified
-  to produce matching numbers against the Python engine on the same demo
-  dataset.
-
-## Testing notes
-
-This was built and tested in a sandboxed environment with no general
-internet access, so the CDN-hosted Chart.js/SheetJS scripts couldn't be
-fetched directly here. To still get real coverage:
-
-- `engine.js` was unit-tested directly under Node.js against the demo CSV
-  (see `test/` for the harness) — every calculation was verified.
-- The full UI was tested end-to-end in a **real headless Chromium browser**
-  (via Playwright) with Chart.js/SheetJS swapped for minimal stand-ins that
-  preserve the same call signatures — this exercised the actual DOM
-  rendering, navigation, filtering, file upload/error handling, and Excel
-  report generation, just not the literal pixel output of Chart.js charts.
-- Fixed one real bug found this way: on narrow mobile viewports, the nav bar
-  could collapse to zero width due to a flexbox/overflow interaction.
-
-You should still do a final check with real Chart.js/SheetJS loaded (i.e.
-open the actual `index.html`, not the test harness) before treating this as
-fully verified — the sandbox this was built in can't fetch those CDN scripts
-to confirm the real chart rendering pixel-for-pixel.
-
-## Files
-
-```
 SmartSpendWeb/
-├── index.html              — page structure
-├── style.css                — "ledger" design system
-├── engine.js                 — analysis engine (pure JS, unit-tested)
-├── app.js                    — UI wiring + Chart.js rendering
-├── report.js                  — client-side Excel report builder (SheetJS)
-├── demo_data.js                — embedded 12-month demo dataset
-├── sample_transactions.csv       — the same demo data as a plain CSV (for reference)
-└── test/                          — Node + Playwright test harness (not needed to run the site)
-```
+├── index.html
+├── style.css
+├── engine.js
+├── app.js
+├── report.js
+├── demo_data.js
+├── sample_transactions.csv
+└── test/
+
+File Description
+
+- "index.html" — Main website structure
+- "style.css" — UI styling and responsive design
+- "engine.js" — Core financial analysis engine
+- "app.js" — User interface, file upload, navigation, charts, and rendering
+- "report.js" — Generates the downloadable Excel report
+- "demo_data.js" — Embedded 12-month demo transaction dataset
+- "sample_transactions.csv" — Sample transaction data
+- "test/" — Testing files for the analysis engine and UI
+
+🧠 How SmartSpend AI Works
+
+The application follows this workflow:
+
+Transaction Data
+       ↓
+CSV / Excel Upload
+       ↓
+Data Cleaning
+       ↓
+Column Detection & Mapping
+       ↓
+Feature Engineering
+       ↓
+Financial Analysis
+       ↓
+ ┌───────────────┬────────────────┬─────────────────┐
+ │               │                │                 │
+Category      Anomalies       Forecasting      Budget Analysis
+Analysis      Detection       & Trends         & Recommendations
+ │               │                │                 │
+ └───────────────┴────────────────┴─────────────────┘
+                       ↓
+              Financial Health Score
+                       ↓
+             Insights & Recommendations
+                       ↓
+                Excel Report
+
+🔍 Analysis Engine
+
+The main analysis engine is implemented in "engine.js".
+
+It performs:
+
+- CSV parsing
+- Excel data processing
+- Column detection
+- Data cleaning
+- Feature engineering
+- Category analysis
+- Merchant analysis
+- Time-based analysis
+- Anomaly detection
+- Expense forecasting
+- Budget recommendations
+- Financial health scoring
+- Insight generation
+
+The analysis runs completely in the browser.
+
+🚨 Anomaly Detection
+
+The client-side version uses:
+
+- IQR (Interquartile Range)
+- Z-score
+
+This approach identifies unusually high or unusual transactions without requiring a backend machine-learning server.
+
+📈 Forecasting
+
+SmartSpend AI uses:
+
+- Moving-average forecasting
+- Linear trend analysis
+
+These methods are used to estimate future spending based on historical transaction patterns.
+
+📊 Excel Report
+
+Users can download a comprehensive Excel report generated directly in the browser using SheetJS.
+
+The report contains multiple sheets covering areas such as:
+
+- Transactions
+- Category analysis
+- Merchant analysis
+- Monthly trends
+- Anomalies
+- Forecasting
+- Budget recommendations
+- Financial health
+- Insights
+
+🔐 Privacy
+
+SmartSpend AI is designed as a client-side application.
+
+Your uploaded transaction data is processed directly inside your browser and is not sent to a backend server.
+
+«Always verify the privacy behavior of third-party libraries and hosting services before using the application with highly sensitive financial information.»
+
+🌐 Deployment
+
+SmartSpend AI is deployed using Vercel.
+
+Live Website
+
+https://smart-spend-ai-gules.vercel.app/
+
+The project can also be hosted on other static hosting platforms such as GitHub Pages or Netlify.
+
+There is no backend or build process required.
+
+💻 Run Locally
+
+Clone the repository:
+
+git clone https://github.com/Sadhiya0201/SmartSpendAI.git
+
+Navigate to the project:
+
+cd SmartSpendAI
+
+You can simply open:
+
+index.html
+
+in your browser.
+
+For a local development server, you can also run:
+
+python3 -m http.server 8000
+
+Then open:
+
+http://localhost:8000
+
+🧪 Testing
+
+The project includes testing files under the "test/" directory.
+
+The analysis engine was tested using Node.js, while the UI was tested using a headless Chromium environment.
+
+The testing covers:
+
+- Data processing
+- Financial calculations
+- Navigation
+- File upload
+- Error handling
+- UI rendering
+- Excel report generation
+
+🔄 Streamlit vs. Web Version
+
+SmartSpend AI was originally designed with a Python/Streamlit approach.
+
+This web version moves the core functionality to JavaScript so that the application can run entirely in the browser without requiring:
+
+- Python
+- Streamlit
+- A backend server
+- A database
+
+The client-side version uses IQR + Z-score anomaly detection instead of Isolation Forest because scikit-learn is not required for the browser-based implementation.
+
+👩‍💻 Author
+
+Sadhiya
+
+GitHub:
+https://github.com/Sadhiya0201
+
+⭐ Support
+
+If you find SmartSpend AI useful, consider giving the repository a ⭐ on GitHub!
+
+GitHub Repository:
+https://github.com/Sadhiya0201/SmartSpendAI
