@@ -1,0 +1,583 @@
+const SMARTSPEND_DEMO_CSV = `Transaction ID,Date,Description,Merchant,Category,Amount,Payment Method,Type
+T0001,2025-08-01,Monthly Salary,Employer Payroll,Income,48457.08,Bank Transfer,Income
+T0002,2025-08-03,Netflix - Entertainment,Netflix,Entertainment,674.11,Card,Expense
+T0037,2025-08-03,Amazon - Shopping,Amazon,Shopping,2121.69,UPI,Expense
+T0017,2025-08-03,Local Cafe - Food,Local Cafe,Food,127.85,Card,Expense
+T0042,2025-08-04,Cult.fit Gym - Health & Fitness,Cult.fit Gym,Health & Fitness,1933.03,Cash,Expense
+T0027,2025-08-04,Metro Card - Transport,Metro Card,Transport,143.26,Cash,Expense
+T0023,2025-08-04,Rapido - Transport,Rapido,Transport,40.81,UPI,Expense
+T0018,2025-08-04,Starbucks - Food,Starbucks,Food,140.26,Card,Expense
+T0040,2025-08-05,Spotify - Entertainment,Spotify,Entertainment,219.02,UPI,Expense
+T0039,2025-08-05,PVR Cinemas - Entertainment,PVR Cinemas,Entertainment,293.48,UPI,Expense
+T0011,2025-08-08,Dominos - Food,Dominos,Food,522.1,Cash,Expense
+T0044,2025-08-08,Book Store - Education,Book Store,Education,1393.66,UPI,Expense
+T0047,2025-08-09,Local Spa - Personal Care,Local Spa,Personal Care,232.73,Card,Expense
+T0012,2025-08-10,Swiggy - Food,Swiggy,Food,729.24,Cash,Expense
+T0031,2025-08-12,Rapido - Transport,Rapido,Transport,120.93,UPI,Expense
+T0014,2025-08-13,Local Cafe - Food,Local Cafe,Food,117.19,UPI,Expense
+T0045,2025-08-13,Local Library - Education,Local Library,Education,259.65,Card,Expense
+T0007,2025-08-13,Mobile Recharge - Bills & Utilities,Mobile Recharge,Bills & Utilities,398.87,UPI,Expense
+T0048,2025-08-13,Local Spa - Personal Care,Local Spa,Personal Care,987.81,Card,Expense
+T0043,2025-08-14,Local Clinic - Health & Fitness,Local Clinic,Health & Fitness,316.92,Cash,Expense
+T0026,2025-08-14,Metro Card - Transport,Metro Card,Transport,58.41,UPI,Expense
+T0009,2025-08-15,Local Cafe - Food,Local Cafe,Food,140.37,UPI,Expense
+T0010,2025-08-15,Grocery Mart - Food,Grocery Mart,Food,620.14,UPI,Expense
+T0020,2025-08-18,Petrol Pump - Transport,Petrol Pump,Transport,93.2,Cash,Expense
+T0041,2025-08-18,BookMyShow - Entertainment,BookMyShow,Entertainment,142.09,Card,Expense
+T0029,2025-08-18,Metro Card - Transport,Metro Card,Transport,181.86,Card,Expense
+T0034,2025-08-18,Amazon - Shopping,Amazon,Shopping,2506.44,UPI,Expense
+T0019,2025-08-19,Rapido - Transport,Rapido,Transport,381.39,Card,Expense
+T0013,2025-08-19,Starbucks - Food,Starbucks,Food,129.5,Card,Expense
+T0003,2025-08-19,Spotify - Entertainment,Spotify,Entertainment,116.33,UPI,Expense
+T0004,2025-08-20,Landlord - Monthly Rent - Rent & Housing,Landlord - Monthly Rent,Rent & Housing,12576.6,Bank Transfer,Expense
+T0038,2025-08-20,Netflix - Entertainment,Netflix,Entertainment,327.95,UPI,Expense
+T0049,2025-08-20,Nykaa - Personal Care,Nykaa,Personal Care,712.97,Card,Expense
+T0025,2025-08-20,Ola - Transport,Ola,Transport,138.61,Cash,Expense
+T0015,2025-08-21,Starbucks - Food,Starbucks,Food,505.17,Card,Expense
+T0005,2025-08-21,Housing Society Maintenance - Rent & Housing,Housing Society Maintenance,Rent & Housing,1859.19,Bank Transfer,Expense
+T0036,2025-08-22,Flipkart - Shopping,Flipkart,Shopping,319.03,Card,Expense
+T0024,2025-08-22,Petrol Pump - Transport,Petrol Pump,Transport,242.09,Card,Expense
+T0030,2025-08-22,Ola - Transport,Ola,Transport,43.48,Card,Expense
+T0021,2025-08-23,Metro Card - Transport,Metro Card,Transport,114.23,Cash,Expense
+T0006,2025-08-23,Broadband ISP - Bills & Utilities,Broadband ISP,Bills & Utilities,783.22,UPI,Expense
+T0033,2025-08-24,Flipkart - Shopping,Flipkart,Shopping,664.38,Card,Expense
+T0032,2025-08-24,Amazon - Shopping,Amazon,Shopping,351.31,Card,Expense
+T0028,2025-08-24,Metro Card - Transport,Metro Card,Transport,317.52,Card,Expense
+T0046,2025-08-25,MakeMyTrip - Travel,MakeMyTrip,Travel,876.27,Card,Expense
+T0022,2025-08-25,Ola - Transport,Ola,Transport,253.94,Card,Expense
+T0008,2025-08-26,Starbucks - Food,Starbucks,Food,612.71,Card,Expense
+T0016,2025-08-27,Local Cafe - Food,Local Cafe,Food,200.08,UPI,Expense
+T0035,2025-08-27,Local Mall - Shopping,Local Mall,Shopping,901.71,Card,Expense
+T0050,2025-09-01,Monthly Salary,Employer Payroll,Income,47640.97,Bank Transfer,Income
+T0081,2025-09-01,Uber - Transport,Uber,Transport,379.77,Cash,Expense
+T0052,2025-09-02,Netflix - Entertainment,Netflix,Entertainment,655.18,Card,Expense
+T0060,2025-09-02,Swiggy - Food,Swiggy,Food,266.73,Cash,Expense
+T0099,2025-09-03,IRCTC - Travel,IRCTC,,4554.42,UPI,Expense
+T0077,2025-09-04,Metro Card - Transport,Metro Card,Transport,94.11,UPI,Expense
+T0070,2025-09-04,Dominos - Food,Dominos,Food,200.31,UPI,Expense
+T0054,2025-09-04,Landlord - Monthly Rent - Rent & Housing,Landlord - Monthly Rent,Rent & Housing,11739.27,Bank Transfer,Expense
+T0082,2025-09-05,Petrol Pump - Transport,Petrol Pump,Transport,202.76,UPI,Expense
+T0056,2025-09-05,Broadband ISP - Bills & Utilities,Broadband ISP,Bills & Utilities,834.16,UPI,Expense
+T0074,2025-09-05,Metro Card - Transport,Metro Card,Transport,129.95,UPI,Expense
+T0086,2025-09-05,Flipkart - Shopping,Flipkart,Shopping,428.7,Card,Expense
+T0100,2025-09-07,Nykaa - Personal Care,Nykaa,Personal Care,676.23,Card,Expense
+T0067,2025-09-08,Zomato - Food,Zomato,Food,483.44,Card,Expense
+T0080,2025-09-08,Uber - Transport,Uber,Transport,76.82,Cash,Expense
+T0064,2025-09-08,Swiggy - Food,Swiggy,Food,618.09,UPI,Expense
+T0092,2025-09-09,Netflix - Entertainment,Netflix,Entertainment,454.99,Card,Expense
+T0093,2025-09-09,YouTube Premium - Entertainment,YouTube Premium,Entertainment,212.44,UPI,Expense
+T0084,2025-09-09,Rapido - Transport,Rapido,Transport,555.93,Cash,Expense
+T0066,2025-09-09,Swiggy - Food,Swiggy,Food,422.18,UPI,Expense
+T0063,2025-09-09,Dominos - Food,Dominos,Food,237.01,Card,Expense
+T0098,2025-09-13,Local Library - Education,Local Library,Education,209.9,UPI,Expense
+T0057,2025-09-13,Mobile Recharge - Bills & Utilities,Mobile Recharge,Food & Dining,405.58,UPI,Expense
+T0071,2025-09-13,Rapido - Transport,Rapido,Transport,94.42,UPI,Expense
+T0094,2025-09-14,Apollo Pharmacy - Health & Fitness,Apollo Pharmacy,Health & Fitness,715.25,UPI,Expense
+T0061,2025-09-14,Local Cafe - Food,Local Cafe,Food,329.22,Cash,Expense
+T0085,2025-09-14,Metro Card - Transport,Metro Card,Transport,59.06,Cash,Expense
+T0062,2025-09-15,Local Cafe - Food,Local Cafe,Food,154.88,Cash,Expense
+T0091,2025-09-16,YouTube Premium - Entertainment,YouTube Premium,Entertainment,266.01,UPI,Expense
+T0097,2025-09-17,Apollo Pharmacy - Health & Fitness,Apollo Pharmacy,Health & Fitness,1441.78,Cash,Expense
+T0058,2025-09-17,Dominos - Food,Dominos,Food,84.64,UPI,Expense
+T0053,2025-09-18,Spotify - Entertainment,Spotify,Entertainment,118.57,UPI,Expense
+T0095,2025-09-18,MedPlus - Health & Fitness,MedPlus,Health & Fitness,222.62,UPI,Expense
+T0087,2025-09-19,Decathlon - Shopping,Decathlon,Shopping,1181.98,Card,Expense
+T0088,2025-09-19,BookMyShow - Entertainment,BookMyShow,Entertainment,178.27,UPI,Expense
+T0051,2025-09-20,Freelance Payment,Freelance Client,Income,3371.13,Bank Transfer,Income
+T0083,2025-09-20,Rapido - Transport,Rapido,Transport,68.09,UPI,Expense
+T0090,2025-09-20,YouTube Premium - Entertainment,YouTube Premium,Entertainment,152.86,Card,Expense
+T0096,2025-09-21,Cult.fit Gym - Health & Fitness,Cult.fit Gym,Health & Fitness,2273.42,UPI,Expense
+T0078,2025-09-21,Ola - Transport,Ola,Transport,110.03,Card,Expense
+T0076,2025-09-21,Rapido - Transport,Rapido,Transport,449.61,Cash,Expense
+T0055,2025-09-22,Housing Society Maintenance - Rent & Housing,Housing Society Maintenance,Rent & Housing,1830.62,Bank Transfer,Expense
+T0089,2025-09-24,YouTube Premium - Entertainment,YouTube Premium,Entertainment,506.03,Card,Expense
+T0079,2025-09-24,Uber - Transport,Uber,Transport,302.24,Card,Expense
+T0065,2025-09-25,Dominos - Food,Dominos,Food,315.12,UPI,Expense
+T0069,2025-09-25,Grocery Mart - Food,Grocery Mart,Food,87.76,UPI,Expense
+T0073,2025-09-25,Ola - Transport,Ola,Transport,504.58,UPI,Expense
+T0072,2025-09-26,Petrol Pump - Transport,Petrol Pump,Transport,161.37,UPI,Expense
+T0068,2025-09-26,Starbucks - Food,Starbucks,Food,104.44,Card,Expense
+T0059,2025-09-26,Local Cafe - Food,Local Cafe,Food,554.94,Card,Expense
+T0101,2025-09-26,Local Spa - Personal Care,Local Spa,Personal Care,671.36,UPI,Expense
+T0075,2025-09-27,Rapido - Transport,Rapido,Transport,447.46,UPI,Expense
+T0102,2025-10-01,Monthly Salary,Employer Payroll,Income,49685.79,Bank Transfer,Income
+T0144,2025-10-02,Netflix - Entertainment,Netflix,Entertainment,413.97,Card,Expense
+T0114,2025-10-02,Local Cafe - Food,Local Cafe,Food,431.13,Card,Expense
+T0154,2025-10-03,Local Spa - Personal Care,Local Spa,Personal Care,445.32,Cash,Expense
+T0121,2025-10-03,Grocery Mart - Food,Grocery Mart,Food,90.98,Card,Expense
+T0140,2025-10-03,Myntra - Shopping,Myntra,Shopping,435.24,UPI,Expense
+T0149,2025-10-04,Local Library - Education,Local Library,Education,1187.78,Card,Expense
+T0145,2025-10-05,Netflix - Entertainment,Netflix,Entertainment,378.91,UPI,Expense
+T0112,2025-10-05,Local Cafe - Food,Local Cafe,Food,84.3,UPI,Expense
+T0128,2025-10-07,Ola - Transport,Ola,Transport,58.4,Card,Expense
+T0105,2025-10-07,Landlord - Monthly Rent - Rent & Housing,Landlord - Monthly Rent,Rent & Housing,11867.2,Bank Transfer,Expense
+T0132,2025-10-07,Ola - Transport,Ola,Transport,522.4,Cash,Expense
+T0118,2025-10-07,Zomato - Food,Zomato,Food,328.82,UPI,Expense
+T0126,2025-10-09,Metro Card - Transport,Metro Card,Transport,407.98,Cash,Expense
+T0153,2025-10-09,Salon - Personal Care,Salon,Personal Care,216.56,UPI,Expense
+T0110,2025-10-09,Grocery Mart - Food,Grocery Mart,Food,781.26,UPI,Expense
+T0131,2025-10-09,Metro Card - Transport,Metro Card,Transport,256.19,Card,Expense
+T0130,2025-10-10,Ola - Transport,Ola,Transport,107.89,Cash,Expense
+T0109,2025-10-10,Swiggy - Food,Swiggy,Food,615.6,UPI,Expense
+T0120,2025-10-11,Grocery Mart - Food,Grocery Mart,Food,102.88,Card,Expense
+T0103,2025-10-12,Netflix - Entertainment,Netflix,Entertainment,674.57,Card,Expense
+T0134,2025-10-13,Metro Card - Transport,Metro Card,Transport,398.15,Card,Expense
+T0129,2025-10-13,Uber - Transport,Uber,Transport,75.09,Card,Expense
+T0108,2025-10-13,Mobile Recharge - Bills & Utilities,Mobile Recharge,Bills & Utilities,389.15,UPI,Expense
+T0146,2025-10-13,PVR Cinemas - Entertainment,PVR Cinemas,Entertainment,342.6,UPI,Expense
+T0127,2025-10-13,Petrol Pump - Transport,Petrol Pump,Transport,226.07,Card,Expense
+T0116,2025-10-14,Starbucks - Food,Starbucks,Food,657.27,Cash,Expense
+T0138,2025-10-14,Rapido - Transport,Rapido,Transport,57.2,Cash,Expense
+T0117,2025-10-15,Swiggy - Food,Swiggy,Food,125.35,Cash,Expense
+T0104,2025-10-15,Spotify - Entertainment,Spotify,,119.75,UPI,Expense
+T0124,2025-10-16,Petrol Pump - Transport,Petrol Pump,Transport,227.87,Card,Expense
+T0148,2025-10-17,Apollo Pharmacy - Health & Fitness,Apollo Pharmacy,Health & Fitness,210.08,Cash,Expense
+T0142,2025-10-17,Myntra - Shopping,Myntra,Shopping,2583.74,UPI,Expense
+T0111,2025-10-17,Swiggy - Food,Swiggy,Food,161.83,Card,Expense
+T0139,2025-10-18,Amazon - Shopping,Amazon,Shopping,2141.06,UPI,Expense
+T0135,2025-10-18,Ola - Transport,Ola,Transport,169.27,Cash,Expense
+T0150,2025-10-20,Coursera - Education,Coursera,Education,1628.18,Card,Expense
+T0113,2025-10-20,Swiggy - Food,Swiggy,Food,123.24,Cash,Expense
+T0137,2025-10-20,Uber - Transport,Uber,Transport,262.55,UPI,Expense
+T0151,2025-10-20,IRCTC - Travel,IRCTC,Travel,6035.47,UPI,Expense
+T0147,2025-10-21,YouTube Premium - Entertainment,YouTube Premium,Entertainment,322.11,UPI,Expense
+T0152,2025-10-21,IndiGo Airlines - Travel,IndiGo Airlines,Travel,1372.46,Card,Expense
+T0136,2025-10-21,Petrol Pump - Transport,Petrol Pump,Transport,87.29,UPI,Expense
+T0125,2025-10-22,Petrol Pump - Transport,Petrol Pump,Transport,170.81,UPI,Expense
+T0123,2025-10-22,Grocery Mart - Food,Grocery Mart,Food,903.17,UPI,Expense
+T0115,2025-10-22,Local Cafe - Food,Local Cafe,,175.72,Cash,Expense
+T0107,2025-10-23,Broadband ISP - Bills & Utilities,Broadband ISP,Bills & Utilities,781.76,UPI,Expense
+T0106,2025-10-23,Housing Society Maintenance - Rent & Housing,Housing Society Maintenance,Rent & Housing,1853.43,Bank Transfer,Expense
+T0122,2025-10-25,Starbucks - Food,Starbucks,Food,645.1,UPI,Expense
+T0133,2025-10-25,Rapido - Transport,Rapido,Transport,97.33,Card,Expense
+T0119,2025-10-26,Local Cafe - Food,Local Cafe,Food,90.37,UPI,Expense
+T0143,2025-10-26,Decathlon - Shopping,Decathlon,Shopping,595.83,UPI,Expense
+T0141,2025-10-26,Decathlon - Shopping,Decathlon,Shopping,2624.42,Card,Expense
+T0155,2025-11-01,Monthly Salary,Employer Payroll,Income,46884.62,Bank Transfer,Income
+T0183,2025-11-01,Ola - Transport,Ola, Shopping,273.51,Card,Expense
+T0175,2025-11-02,Starbucks - Food,Starbucks,Food,581.29,Card,Expense
+T0169,2025-11-03,Dominos - Food,Dominos,Food,415.39,Cash,Expense
+T0167,2025-11-03,Local Cafe - Food,Local Cafe,Food,704.54,Cash,Expense
+T0170,2025-11-04,Dominos - Food,Dominos,Food,100.06,Cash,Expense
+T0162,2025-11-04,Swiggy - Food,Swiggy,Food,342.97,UPI,Expense
+T0180,2025-11-04,Petrol Pump - Transport,Petrol Pump,Transport,300.93,Card,Expense
+T0157,2025-11-04,Spotify - Entertainment,Spotify,Entertainment,119.99,UPI,Expense
+T0182,2025-11-05,Rapido - Transport,Rapido,Transport,67.47,Cash,Expense
+T0192,2025-11-05,Apollo Pharmacy - Health & Fitness,Apollo Pharmacy,Health & Fitness,626.93,Cash,Expense
+T0173,2025-11-06,Swiggy - Food,Swiggy,Food,405.82,Cash,Expense
+T0194,2025-11-08,Salon - Personal Care,Salon,Personal Care,434.39,UPI,Expense
+T0156,2025-11-11,Netflix - Entertainment,Netflix,Entertainment,670.04,Card,Expense
+T0158,2025-11-11,Landlord - Monthly Rent - Rent & Housing,Landlord - Monthly Rent,Rent & Housing,12587.17,Bank Transfer,Expense
+T0196,2025-11-12,Salon - Personal Care,Salon,Personal Care,257.6,Card,Expense
+T0165,2025-11-13,Zomato - Food,Zomato,Food,168.87,Card,Expense
+T0172,2025-11-13,Swiggy - Food,Swiggy,Food,546.8,Cash,Expense
+T0186,2025-11-13,Local Mall - Shopping,Local Mall,Shopping,479.44,Card,Expense
+T0188,2025-11-13,PVR Cinemas - Entertainment,PVR Cinemas,Entertainment,431.28,UPI,Expense
+T0179,2025-11-13,Uber - Transport,Uber,Transport,69.08,UPI,Expense
+T0166,2025-11-14,Grocery Mart - Food,Grocery Mart,Food,552.96,Card,Expense
+T0190,2025-11-15,Cult.fit Gym - Health & Fitness,Cult.fit Gym,Health & Fitness,762.68,Card,Expense
+T0181,2025-11-15,Petrol Pump - Transport,Petrol Pump,Transport,400.93,Card,Expense
+T0189,2025-11-16,Cult.fit Gym - Health & Fitness,Cult.fit Gym,Health & Fitness,2147.78,UPI,Expense
+T0185,2025-11-17,Amazon - Shopping,Amazon,Shopping,3288.19,Card,Expense
+T0177,2025-11-19,Rapido - Transport,Rapido,Transport,493.44,UPI,Expense
+T0191,2025-11-19,Cult.fit Gym - Health & Fitness,Cult.fit Gym,Health & Fitness,2115.22,Card,Expense
+T0168,2025-11-19,Zomato - Food,Zomato,Food,634.52,UPI,Expense
+T0163,2025-11-19,Dominos - Food,Dominos,Food,246.22,UPI,Expense
+T0164,2025-11-20,Starbucks - Food,Starbucks,Food,166.15,Cash,Expense
+T0187,2025-11-21,Netflix - Entertainment,Netflix,Entertainment,864.36,UPI,Expense
+T0178,2025-11-21,Rapido - Transport,Rapido,Transport,386.9,Cash,Expense
+T0195,2025-11-22,Nykaa - Personal Care,Nykaa,Personal Care,726.06,Cash,Expense
+T0159,2025-11-23,Housing Society Maintenance - Rent & Housing,Housing Society Maintenance,Rent & Housing,1849.36,Bank Transfer,Expense
+T0161,2025-11-24,Mobile Recharge - Bills & Utilities,Mobile Recharge,Bills & Utilities,414.18,UPI,Expense
+T0171,2025-11-25,Grocery Mart - Food,Grocery Mart,Food,145.18,UPI,Expense
+T0171,2025-11-25,Grocery Mart - Food,Grocery Mart,Food,145.18,UPI,Expense
+T0174,2025-11-25,Swiggy - Food,Swiggy,Food,81.08,UPI,Expense
+T0193,2025-11-25,Coursera - Education,Coursera,Education,276.21,UPI,Expense
+T0160,2025-11-26,Broadband ISP - Bills & Utilities,Broadband ISP,Bills & Utilities,782.6,UPI,Expense
+T0176,2025-11-27,Zomato - Food,Zomato,Food,654.48,UPI,Expense
+T0184,2025-11-27,Petrol Pump - Transport,Petrol Pump,Transport,46.36,Card,Expense
+T0239,2025-12-01,Cult.fit Gym - Health & Fitness,Cult.fit Gym,Health & Fitness,1981.25,Card,Expense
+T0241,2025-12-01,Nykaa - Personal Care,Nykaa,Personal Care,456.87,Cash,Expense
+T0214,2025-12-01,Local Cafe - Food,Local Cafe,Food,666.14,Cash,Expense
+T0197,2025-12-01,Monthly Salary,Employer Payroll,Income,46323.92,Bank Transfer,Income
+T0226,2025-12-02,Metro Card - Transport,Metro Card,Transport,142.57,Cash,Expense
+T0228,2025-12-02,Local Mall - Shopping,Local Mall,Shopping,661.62,Card,Expense
+T0227,2025-12-05,Ola - Transport,Ola,Transport,466.55,UPI,Expense
+T0229,2025-12-06,Myntra - Shopping,Myntra,Shopping,1468.37,UPI,Expense
+T0205,2025-12-06,Local Cafe - Food,Local Cafe,Food,376.55,Card,Expense
+T0209,2025-12-07,Zomato - Food,Zomato,Food,635.29,Card,Expense
+T0212,2025-12-08,Dominos - Food,Dominos,Food,122.74,Card,Expense
+T0204,2025-12-10,Mobile Recharge - Bills & Utilities,Mobile Recharge,Bills & Utilities,412.16,UPI,Expense
+T0206,2025-12-10,Grocery Mart - Food,Grocery Mart,Food,495.2,Card,Expense
+T0220,2025-12-10,Uber - Transport,Uber,Transport,70.46,Cash,Expense
+T0236,2025-12-10,PVR Cinemas - Entertainment,PVR Cinemas,Entertainment,749.49,Card,Expense
+T0200,2025-12-10,Spotify - Entertainment,Spotify,Entertainment,120.88,UPI,Expense
+T0225,2025-12-11,Ola - Transport,Ola,Transport,309.31,UPI,Expense
+T0222,2025-12-12,Rapido - Transport,Rapido,Transport,582.6,Cash,Expense
+T0215,2025-12-12,Local Cafe - Food,Local Cafe,Food,117.0,UPI,Expense
+T0242,2025-12-12,Myntra - Large Purchase,Myntra,Shopping,8146.08,Card,Expense
+T0199,2025-12-13,Netflix - Entertainment,Netflix,Entertainment,641.24,Card,Expense
+T0235,2025-12-14,PVR Cinemas - Entertainment,PVR Cinemas,Entertainment,667.13,UPI,Expense
+T0230,2025-12-14,Amazon - Shopping,Amazon,Shopping,580.36,Card,Expense
+T0208,2025-12-14,Starbucks - Food,Starbucks,Food,578.97,Card,Expense
+T0238,2025-12-14,MedPlus - Health & Fitness,MedPlus,Health & Fitness,201.54,Card,Expense
+T0210,2025-12-14,Swiggy - Food,Swiggy,Food,95.62,UPI,Expense
+T0217,2025-12-14,Grocery Mart - Food,Grocery Mart,Food,939.4,Card,Expense
+T0198,2025-12-14,Freelance Payment,Freelance Client,Income,3382.8,Bank Transfer,Income
+T0221,2025-12-15,Metro Card - Transport,Metro Card,Transport,62.69,UPI,Expense
+T0202,2025-12-16,Housing Society Maintenance - Rent & Housing,Housing Society Maintenance,Rent & Housing,1839.3,Bank Transfer,Expense
+T0237,2025-12-16,Netflix - Entertainment,Netflix,Entertainment,237.04,UPI,Expense
+T0223,2025-12-16,Ola - Transport,Ola,Transport,584.48,Cash,Expense
+T0207,2025-12-16,Grocery Mart - Food,Grocery Mart,Food,781.43,Cash,Expense
+T0201,2025-12-16,Landlord - Monthly Rent - Rent & Housing,Landlord - Monthly Rent,Rent & Housing,12313.92,Bank Transfer,Expense
+T0216,2025-12-17,Starbucks - Food,Starbucks,Food,197.35,UPI,Expense
+T0233,2025-12-17,Amazon - Shopping,Amazon,Shopping,809.63,UPI,Expense
+T0224,2025-12-18,Uber - Transport,Uber,Transport,134.66,Cash,Expense
+T0232,2025-12-18,Myntra - Shopping,Myntra,Shopping,2367.91,UPI,Expense
+T0240,2025-12-18,Cult.fit Gym - Health & Fitness,Cult.fit Gym,Health & Fitness,389.15,UPI,Expense
+T0203,2025-12-18,Broadband ISP - Bills & Utilities,Broadband ISP,Bills & Utilities,795.24,UPI,Expense
+T0213,2025-12-20,Zomato - Food,Zomato,Food,502.59,Cash,Expense
+T0219,2025-12-20,Petrol Pump - Transport,Petrol Pump,Transport,226.88,Card,Expense
+T0218,2025-12-21,Local Cafe - Food,Local Cafe,Food,438.61,UPI,Expense
+T0231,2025-12-23,Decathlon - Shopping,Decathlon,Shopping,1686.49,UPI,Expense
+T0211,2025-12-24,Grocery Mart - Food,Grocery Mart,Food,91.79,UPI,Expense
+T0234,2025-12-24,Spotify - Entertainment,Spotify,Entertainment,657.03,Card,Expense
+T0243,2026-01-01,Monthly Salary,Employer Payroll,Income,46650.46,Bank Transfer,Income
+T0261,2026-01-02,Local Cafe - Food,Local Cafe,Food,425.4,UPI,Expense
+T0255,2026-01-02,Dominos - Food,Dominos,Food,268.74,Cash,Expense
+T0250,2026-01-03,Swiggy - Food,Swiggy,Food,489.97,Cash,Expense
+T0275,2026-01-04,Amazon - Shopping,Amazon,Shopping,4470.61,UPI,Expense
+T0271,2026-01-04,Ola - Transport,Ola,Transport,441.3,Cash,Expense
+T0272,2026-01-06,Petrol Pump - Transport,Petrol Pump,Transport,100.97,UPI,Expense
+T0286,2026-01-07,Salon - Personal Care,Salon,Personal Care,220.72,UPI,Expense
+T0260,2026-01-07,Swiggy - Food,Swiggy,Food,201.19,Cash,Expense
+T0253,2026-01-08,Starbucks - Food,Starbucks,Food,511.74,Cash,Expense
+T0244,2026-01-08,Netflix - Entertainment,Netflix,Entertainment,680.51,Card,Expense
+T0270,2026-01-09,Petrol Pump - Transport,Petrol Pump,Transport,117.19,Card,Expense
+T0278,2026-01-10,Amazon - Shopping,Amazon,Shopping,806.94,Card,Expense
+T0279,2026-01-10,Spotify - Entertainment,Spotify,Entertainment,123.33,Card,Expense
+T0264,2026-01-11,Swiggy - Food,Swiggy,food,142.93,UPI,Expense
+T0283,2026-01-11,Udemy - Education,Udemy,Education,482.68,UPI,Expense
+T0277,2026-01-11,Myntra - Shopping,Myntra,Shopping,1152.23,UPI,Expense
+T0281,2026-01-12,MedPlus - Health & Fitness,MedPlus,Health & Fitness,1244.16,Cash,Expense
+T0251,2026-01-12,Dominos - Food,Dominos,Food,403.66,Card,Expense
+T0252,2026-01-12,Grocery Mart - Food,Grocery Mart,Food,914.43,UPI,Expense
+T0246,2026-01-13,Landlord - Monthly Rent - Rent & Housing,Landlord - Monthly Rent,Rent & Housing,12370.98,Bank Transfer,Expense
+T0273,2026-01-13,Petrol Pump - Transport,Petrol Pump,Transport,356.18,Card,Expense
+T0280,2026-01-13,YouTube Premium - Entertainment,YouTube Premium,Entertainment,238.34,UPI,Expense
+T0249,2026-01-13,Mobile Recharge - Bills & Utilities,Mobile Recharge,Bills & Utilities,411.99,UPI,Expense
+T0282,2026-01-14,Local Clinic - Health & Fitness,Local Clinic,Health & Fitness,334.01,Card,Expense
+T0247,2026-01-14,Housing Society Maintenance - Rent & Housing,Housing Society Maintenance,Rent & Housing,1876.08,Bank Transfer,Expense
+T0269,2026-01-15,Ola - Transport,Ola,Transport,403.34,Cash,Expense
+T0285,2026-01-17,Nykaa - Personal Care,Nykaa,Personal Care,315.63,Cash,Expense
+T0265,2026-01-17,Zomato - Food,Zomato,Food,80.9,Cash,Expense
+T0258,2026-01-18,Swiggy - Food,Swiggy,Food,316.23,Card,Expense
+T0254,2026-01-18,Local Cafe - Food,Local Cafe,Food,108.69,UPI,Expense
+T0268,2026-01-19,Ola - Transport,Ola,Transport,402.72,UPI,Expense
+T0248,2026-01-20,Broadband ISP - Bills & Utilities,Broadband ISP,Bills & Utilities,836.6,UPI,Expense
+T0262,2026-01-21,Starbucks - Food,Starbucks,Food,542.7,UPI,Expense
+T0267,2026-01-21,Metro Card - Transport,Metro Card,Transport,452.28,Card,Expense
+T0259,2026-01-22,Zomato - Food,Zomato,Food,612.44,Cash,Expense
+T0256,2026-01-24,Grocery Mart - Food,Grocery Mart,Food,252.79,UPI,Expense
+T0245,2026-01-24,Spotify - Entertainment,Spotify,Entertainment,121.34,UPI,Expense
+T0276,2026-01-24,Local Mall - Shopping,Local Mall,Shopping,1503.65,Card,Expense
+T0263,2026-01-24,Starbucks - Food,Starbucks,Food,580.41,Cash,Expense
+T0284,2026-01-25,Coursera - Education,Coursera,Education,1493.01,UPI,Expense
+T0266,2026-01-26,Dominos - Food,Dominos,Food,427.49,Card,Expense
+T0274,2026-01-27,Petrol Pump - Transport,Petrol Pump,Transport,120.74,UPI,Expense
+T0257,2026-01-27,Zomato - Food,Zomato,Food,570.17,Card,Expense
+T0331,2026-02-01,Nykaa - Personal Care,Nykaa,Personal Care,641.24,Cash,Expense
+T0325,2026-02-01,BookMyShow - Entertainment,BookMyShow,Entertainment,123.67,Card,Expense
+T0287,2026-02-01,Monthly Salary,Employer Payroll,Income,48577.65,Bank Transfer,Income
+T0304,2026-02-01,Zomato - Food,Zomato,Food,676.47,UPI,Expense
+T0311,2026-02-02,Metro Card - Transport,Metro Card,Transport,274.74,Card,Expense
+T0298,2026-02-02,Swiggy - Food,Swiggy,Food,94.08,UPI,Expense
+T0315,2026-02-03,Petrol Pump - Transport,Petrol Pump,Transport,76.96,Card,Expense
+T0316,2026-02-03,Metro Card - Transport,Metro Card,Transport,197.78,Cash,Expense
+T0334,2026-02-04,Apollo Pharmacy - Large Purchase,Apollo Pharmacy,Health & Fitness,6580.99,Card,Expense
+T0329,2026-02-04,Local Library - Education,Local Library,Education,319.47,UPI,Expense
+T0313,2026-02-04,Uber - Transport,Uber,Transport,41.02,Cash,Expense
+T0305,2026-02-05,Swiggy - Food,Swiggy,Food,281.31,UPI,Expense
+T0322,2026-02-05,Spotify - Entertainment,Spotify,Entertainment,599.53,Card,Expense
+T0294,2026-02-05,Zomato - Food,Zomato,Food,102.94,Card,Expense
+T0312,2026-02-06,Uber - Transport,Uber,Transport,45.48,UPI,Expense
+T0308,2026-02-07,Ola - Transport,Ola,Transport,77.13,Cash,Expense
+T0300,2026-02-09,Swiggy - Food,Swiggy,Food,105.44,UPI,Expense
+T0332,2026-02-11,Salon - Personal Care,Salon,Personal Care,1394.58,UPI,Expense
+T0295,2026-02-12,Dominos - Food,Dominos,Food,850.63,Cash,Expense
+T0309,2026-02-13,Rapido - Transport,Rapido,Transport,74.22,Cash,Expense
+T0303,2026-02-14,Local Cafe - Food,Local Cafe,Food,224.28,UPI,Expense
+T0296,2026-02-14,Grocery Mart - Food,Grocery Mart,Food,87.42,Card,Expense
+T0306,2026-02-14,Swiggy - Food,Swiggy,Food,232.6,UPI,Expense
+T0307,2026-02-15,Starbucks - Food,Starbucks,Food,641.32,Card,Expense
+T0288,2026-02-16,Netflix - Entertainment,Netflix,Entertainment,670.65,Card,Expense
+T0323,2026-02-17,Spotify - Entertainment,Spotify,Entertainment,275.01,Card,Expense
+T0318,2026-02-17,Myntra - Shopping,Myntra,Shopping,2433.13,Card,Expense
+T0301,2026-02-18,Local Cafe - Food,Local Cafe,Food,92.93,Cash,Expense
+T0324,2026-02-18,Spotify - Entertainment,Spotify,shopping ,139.37,UPI,Expense
+T0302,2026-02-19,Local Cafe - Food,Local Cafe,Food,168.93,UPI,Expense
+T0292,2026-02-19,Broadband ISP - Bills & Utilities,Broadband ISP,Bills & Utilities,827.1,UPI,Expense
+T0326,2026-02-19,Netflix - Entertainment,Netflix,Entertainment,516.13,UPI,Expense
+T0327,2026-02-20,Spotify - Entertainment,Spotify,Entertainment,226.06,UPI,Expense
+T0310,2026-02-21,Ola - Transport,Ola,Transport,496.91,Card,Expense
+T0289,2026-02-22,Spotify - Entertainment,Spotify,Entertainment,119.6,UPI,Expense
+T0330,2026-02-22,Local Library - Education,Local Library,Education,2933.91,Card,Expense
+T0317,2026-02-23,Metro Card - Transport,Metro Card,FOOD,403.37,UPI,Expense
+T0333,2026-02-24,Nykaa - Personal Care,Nykaa,Personal Care,703.26,Card,Expense
+T0320,2026-02-25,Myntra - Shopping,Myntra,Shopping,1537.46,Card,Expense
+T0328,2026-02-25,Apollo Pharmacy - Health & Fitness,Apollo Pharmacy,Health & Fitness,213.83,Card,Expense
+T0293,2026-02-25,Mobile Recharge - Bills & Utilities,Mobile Recharge,Bills & Utilities,412.17,UPI,Expense
+T0321,2026-02-25,Decathlon - Shopping,Decathlon,Shopping,798.58,UPI,Expense
+T0314,2026-02-26,Uber - Transport,Uber,Transport,43.54,UPI,Expense
+T0297,2026-02-26,Grocery Mart - Food,Grocery Mart,Food,103.22,UPI,Expense
+T0290,2026-02-26,Landlord - Monthly Rent - Rent & Housing,Landlord - Monthly Rent,Rent & Housing,12097.21,Bank Transfer,Expense
+T0319,2026-02-27,Decathlon - Shopping,Decathlon,Shopping,597.25,Card,Expense
+T0299,2026-02-27,Local Cafe - Food,Local Cafe,Food,286.88,Cash,Expense
+T0291,2026-02-27,Housing Society Maintenance - Rent & Housing,Housing Society Maintenance,Rent & Housing,1843.14,Bank Transfer,Expense
+T0357,2026-03-01,Zomato - Food,Zomato,Food,203.41,Cash,Expense
+T0335,2026-03-01,Monthly Salary,Employer Payroll,Income,48586.9,Bank Transfer,Income
+T0356,2026-03-01,Zomato - Food,Zomato,Food,503.72,Card,Expense
+T0383,2026-03-03,IRCTC - Travel,IRCTC,Travel,5226.75,Card,Expense
+T0375,2026-03-04,Decathlon - Shopping,Decathlon,Shopping,1340.85,Card,Expense
+T0369,2026-03-04,Uber - Transport,Uber,Transport,147.35,UPI,Expense
+T0337,2026-03-05,Spotify - Entertainment,Spotify,Entertainment,121.1,UPI,Expense
+T0385,2026-03-06,Salon - Personal Care,Salon,Personal Care,876.14,UPI,Expense
+T0362,2026-03-06,Ola - Transport,Ola,Transport,116.3,Card,Expense
+T0349,2026-03-06,Grocery Mart - Food,Grocery Mart,Food,765.21,Cash,Expense
+T0338,2026-03-07,Landlord - Monthly Rent - Rent & Housing,Landlord - Monthly Rent,Rent & Housing,12478.93,Bank Transfer,Expense
+T0350,2026-03-07,Zomato - Food,Zomato,Food,255.83,Cash,Expense
+T0378,2026-03-07,PVR Cinemas - Entertainment,PVR Cinemas,Entertainment,667.02,Card,Expense
+T0372,2026-03-08,Ola - Transport,Ola,Transport,429.69,Cash,Expense
+T0336,2026-03-08,Netflix - Entertainment,Netflix,Entertainment,630.47,Card,Expense
+T0348,2026-03-10,Grocery Mart - Food,Grocery Mart,Food,124.41,Cash,Expense
+T0374,2026-03-10,Decathlon - Shopping,Decathlon,Shopping,364.41,Card,Expense
+T0348,2026-03-10,Grocery Mart - Food,Grocery Mart,TRANSPORT,124.41,Cash,Expense
+T0379,2026-03-11,PVR Cinemas - Entertainment,PVR Cinemas,Entertainment,526.63,UPI,Expense
+T0347,2026-03-11,Swiggy - Food,Swiggy,Food,115.77,Cash,Expense
+T0354,2026-03-12,Swiggy - Food,Swiggy,Food,749.08,Cash,Expense
+T0376,2026-03-12,Amazon - Shopping,Amazon,Shopping,2963.85,UPI,Expense
+T0352,2026-03-12,Dominos - Food,Dominos,Food,501.38,Card,Expense
+T0367,2026-03-13,Ola - Transport,Ola,Transport,66.15,Card,Expense
+T0368,2026-03-15,Uber - Transport,Uber,Transport,80.76,Card,Expense
+T0342,2026-03-15,Starbucks - Food,Starbucks,Food,325.34,UPI,Expense
+T0360,2026-03-16,Ola - Transport,Ola,Transport,204.08,Card,Expense
+T0361,2026-03-16,Rapido - Transport,Rapido,Transport,141.92,UPI,Expense
+T0377,2026-03-17,Myntra - Shopping,Myntra,Shopping,469.4,UPI,Expense
+T0384,2026-03-17,MakeMyTrip - Travel,MakeMyTrip,Travel,1573.82,Card,Expense
+T0359,2026-03-17,Ola - Transport,Ola,Transport,207.97,Card,Expense
+T0340,2026-03-17,Broadband ISP - Bills & Utilities,Broadband ISP,Bills & Utilities,810.41,UPI,Expense
+T0339,2026-03-17,Housing Society Maintenance - Rent & Housing,Housing Society Maintenance,Rent & Housing,1782.53,Bank Transfer,Expense
+T0364,2026-03-19,Uber - Transport,Uber,Transport,531.02,Card,Expense
+T0358,2026-03-20,Rapido - Transport,Rapido,Transport,116.46,Cash,Expense
+T0365,2026-03-20,Ola - Transport,Ola,Transport,52.29,Card,Expense
+T0351,2026-03-20,Dominos - Food,Dominos,Food,204.38,Cash,Expense
+T0353,2026-03-20,Dominos - Food,Dominos,Food,327.76,Cash,Expense
+T0363,2026-03-21,Uber - Transport,Uber,Transport,62.17,UPI,Expense
+T0343,2026-03-21,Starbucks - Food,Starbucks,Food,225.76,Cash,Expense
+T0366,2026-03-21,Metro Card - Transport,Metro Card,Transport,84.95,Cash,Expense
+T0381,2026-03-21,Apollo Pharmacy - Health & Fitness,Apollo Pharmacy,Health & Fitness,268.4,Cash,Expense
+T0341,2026-03-21,Mobile Recharge - Bills & Utilities,Mobile Recharge,Bills & Utilities,399.68,UPI,Expense
+T0345,2026-03-22,Local Cafe - Food,Local Cafe,Food,219.53,Card,Expense
+T0380,2026-03-23,Cult.fit Gym - Health & Fitness,Cult.fit Gym,Health & Fitness,468.56,UPI,Expense
+T0386,2026-03-23,Nykaa - Personal Care,Nykaa,Personal Care,348.56,Cash,Expense
+T0371,2026-03-24,Uber - Transport,Uber,Transport,79.24,UPI,Expense
+T0355,2026-03-24,Grocery Mart - Food,Grocery Mart,Food,102.42,Cash,Expense
+T0373,2026-03-25,Amazon - Shopping,Amazon,Shopping,4290.17,UPI,Expense
+T0344,2026-03-25,Dominos - Food,Dominos,Food,82.51,UPI,Expense
+T0370,2026-03-26,Ola - Transport,Ola,Transport,153.05,Card,Expense
+T0346,2026-03-26,Swiggy - Food,Swiggy,Food,723.01,Card,Expense
+T0382,2026-03-26,Coursera - Education,Coursera,Education,2264.39,Card,Expense
+T0399,2026-04-01,Zomato - Food,Zomato,Food,360.25,UPI,Expense
+T0387,2026-04-01,Monthly Salary,Employer Payroll,Income,50045.14,Bank Transfer,Income
+T0398,2026-04-01,Local Cafe - Food,Local Cafe,Food,773.33,UPI,Expense
+T0434,2026-04-02,Coursera - Education,Coursera,Education,2812.2,UPI,Expense
+T0414,2026-04-02,Metro Card - Transport,Metro Card,Transport,524.11,Card,Expense
+T0405,2026-04-02,Starbucks - Food,Starbucks,Food,373.49,UPI,Expense
+T0425,2026-04-03,Spotify - Entertainment,Spotify,Entertainment,448.28,UPI,Expense
+T0388,2026-04-05,Freelance Payment,Freelance Client,Income,2225.64,Bank Transfer,Income
+T0395,2026-04-05,Grocery Mart - Food,Grocery Mart,Food,263.69,Cash,Expense
+T0423,2026-04-06,Local Mall - Shopping,Local Mall,Shopping,758.18,UPI,Expense
+T0418,2026-04-08,Rapido - Transport,Rapido,Transport,168.68,Cash,Expense
+T0409,2026-04-08,Rapido - Transport,Rapido,Transport,138.36,UPI,Expense
+T0390,2026-04-09,Spotify - Entertainment,Spotify,Entertainment,122.83,UPI,Expense
+T0427,2026-04-09,YouTube Premium - Entertainment,YouTube Premium,Entertainment,574.52,Card,Expense
+T0394,2026-04-10,Mobile Recharge - Bills & Utilities,Mobile Recharge,Bills & Utilities,391.24,UPI,Expense
+T0404,2026-04-10,Dominos - Food,Dominos,Food,186.66,UPI,Expense
+T0415,2026-04-10,Metro Card - Transport,Metro Card,Transport,250.93,UPI,Expense
+T0420,2026-04-10,Local Mall - Shopping,Local Mall,Shopping,893.82,UPI,Expense
+T0392,2026-04-11,Housing Society Maintenance - Rent & Housing,Housing Society Maintenance,Rent & Housing,1822.28,Bank Transfer,Expense
+T0435,2026-04-12,IndiGo Airlines - Travel,IndiGo Airlines,Travel,533.26,UPI,Expense
+T0424,2026-04-12,Myntra - Shopping,Myntra,Shopping,421.78,Card,Expense
+T0438,2026-04-12,PVR Cinemas - Large Purchase,PVR Cinemas,Entertainment,2237.18,Card,Expense
+T0437,2026-04-12,Salon - Personal Care,Salon,Personal Care,1252.26,Cash,Expense
+T0400,2026-04-13,Grocery Mart - Food,Grocery Mart,Food,298.31,Card,Expense
+T0413,2026-04-13,Ola - Transport,Ola,Transport,202.93,Card,Expense
+T0417,2026-04-13,Ola - Transport,Ola,Transport,304.56,Cash,Expense
+T0422,2026-04-14,Local Mall - Shopping,Local Mall,Shopping,933.81,UPI,Expense
+T0391,2026-04-14,Landlord - Monthly Rent - Rent & Housing,Landlord - Monthly Rent,Rent & Housing,12110.98,Bank Transfer,Expense
+T0393,2026-04-15,Broadband ISP - Bills & Utilities,Broadband ISP,Bills & Utilities,802.81,UPI,Expense
+T0432,2026-04-15,Local Clinic - Health & Fitness,Local Clinic,Health & Fitness,2189.87,Cash,Expense
+T0433,2026-04-16,Local Clinic - Health & Fitness,Local Clinic,Health & Fitness,307.46,UPI,Expense
+T0411,2026-04-18,Metro Card - Transport,Metro Card,Transport,485.56,Card,Expense
+T0401,2026-04-18,Zomato - Food,Zomato,Food,923.59,UPI,Expense
+T0419,2026-04-18,Uber - Transport,Uber,Transport,520.53,UPI,Expense
+T0411,2026-04-18,Metro Card - Transport,Metro Card,Transport,485.56,Card,Expense
+T0412,2026-04-18,Ola - Transport,Ola,Transport,285.83,Cash,Expense
+T0406,2026-04-18,Petrol Pump - Transport,Petrol Pump,Transport,71.01,UPI,Expense
+T0436,2026-04-19,Local Spa - Personal Care,Local Spa,Personal Care,683.34,Card,Expense
+T0429,2026-04-19,Netflix - Entertainment,Netflix,Entertainment,207.65,Card,Expense
+T0426,2026-04-20,BookMyShow - Entertainment,BookMyShow,Entertainment,123.86,UPI,Expense
+T0408,2026-04-21,Uber - Transport,Uber,Transport,589.32,UPI,Expense
+T0430,2026-04-21,Netflix - Entertainment,Netflix,Entertainment,211.19,Card,Expense
+T0410,2026-04-22,Uber - Transport,Uber,Transport,60.42,Cash,Expense
+T0403,2026-04-23,Swiggy - Food,Swiggy,Food,780.67,Cash,Expense
+T0402,2026-04-23,Starbucks - Food,Starbucks,Food,255.17,Cash,Expense
+T0431,2026-04-25,MedPlus - Health & Fitness,MedPlus,Health & Fitness,265.18,Cash,Expense
+T0421,2026-04-25,Myntra - Shopping,Myntra,Shopping,2106.94,UPI,Expense
+T0407,2026-04-25,Metro Card - Transport,Metro Card,Transport,225.73,Card,Expense
+T0428,2026-04-26,YouTube Premium - Entertainment,YouTube Premium,Entertainment,196.02,UPI,Expense
+T0396,2026-04-26,Swiggy - Food,Swiggy,Food,315.42,UPI,Expense
+T0397,2026-04-26,Zomato - Food,Zomato,Food,149.68,Cash,Expense
+T0389,2026-04-26,Netflix - Entertainment,Netflix,Entertainment,675.63,Card,Expense
+T0416,2026-04-27,Rapido - Transport,Rapido,Transport,44.61,Cash,Expense
+T0473,2026-05-01,Amazon - Shopping,Amazon,Shopping,2444.27,Card,Expense
+T0439,2026-05-01,Monthly Salary,Employer Payroll,Income,46856.51,Bank Transfer,Income
+T0483,2026-05-02,Local Spa - Personal Care,Local Spa,Personal Care,403.79,Cash,Expense
+T0474,2026-05-03,Amazon - Shopping,Amazon,Shopping,1754.83,UPI,Expense
+T0463,2026-05-03,Uber - Transport,Uber,Transport,287.12,UPI,Expense
+T0482,2026-05-03,Nykaa - Personal Care,Nykaa,Personal Care,231.91,UPI,Expense
+T0471,2026-05-03,Flipkart - Shopping,Flipkart,Shopping,1273.4,Card,Expense
+T0459,2026-05-04,Starbucks - Food,Starbucks,Food,123.77,Cash,Expense
+T0453,2026-05-04,Swiggy - Food,Swiggy,Food,946.74,Card,Expense
+T0457,2026-05-04,Dominos - Food,Dominos,Food,156.29,Cash,Expense
+T0465,2026-05-05,Metro Card - Transport,Metro Card,Transport,45.98,Card,Expense
+T0460,2026-05-05,Local Cafe - Food,Local Cafe,Food,313.68,UPI,Expense
+T0449,2026-05-06,Dominos - Food,Dominos,Food,672.8,Cash,Expense
+T0452,2026-05-07,Swiggy - Food,Swiggy,Food,543.52,Card,Expense
+T0470,2026-05-08,Amazon - Shopping,Amazon,Shopping,3243.29,UPI,Expense
+T0456,2026-05-08,Grocery Mart - Food,Grocery Mart,Food,95.04,Cash,Expense
+T0454,2026-05-08,Zomato - Food,Zomato,Food,117.1,UPI,Expense
+T0472,2026-05-08,Amazon - Shopping,Amazon,Shopping,346.12,Card,Expense
+T0441,2026-05-09,Netflix - Entertainment,Netflix,Entertainment,677.5,Card,Expense
+T0451,2026-05-10,Local Cafe - Food,Local Cafe,Food,638.11,Cash,Expense
+T0455,2026-05-12,Local Cafe - Food,Local Cafe,,804.67,Card,Expense
+T0468,2026-05-12,Ola - Transport,Ola,Transport,303.91,UPI,Expense
+T0458,2026-05-13,Grocery Mart - Food,Grocery Mart,Food,413.1,Card,Expense
+T0448,2026-05-13,Dominos - Food,Dominos,Food,220.63,UPI,Expense
+T0446,2026-05-13,Mobile Recharge - Bills & Utilities,Mobile Recharge,Bills & Utilities,394.7,UPI,Expense
+T0477,2026-05-13,YouTube Premium - Entertainment,YouTube Premium,Entertainment,143.57,Card,Expense
+T0480,2026-05-13,Coursera - Education,Coursera,Education,362.09,Card,Expense
+T0461,2026-05-14,Zomato - Food,Zomato,Food,402.24,Cash,Expense
+T0478,2026-05-15,Local Clinic - Health & Fitness,Local Clinic,Health & Fitness,309.5,UPI,Expense
+T0450,2026-05-16,Zomato - Food,Zomato,Food,81.5,UPI,Expense
+T0445,2026-05-17,Broadband ISP - Bills & Utilities,Broadband ISP,Bills & Utilities,805.75,UPI,Expense
+T0440,2026-05-17,Freelance Payment,Freelance Client,Income,5607.02,Bank Transfer,Income
+T0481,2026-05-17,Udemy - Education,Udemy,Education,1530.56,UPI,Expense
+T0447,2026-05-18,Dominos - Food,Dominos,Food,151.4,UPI,Expense
+T0467,2026-05-19,Rapido - Transport,Rapido,Transport,369.75,Cash,Expense
+T0466,2026-05-19,Petrol Pump - Transport,Petrol Pump,Transport,337.43,Card,Expense
+T0469,2026-05-20,Rapido - Transport,Rapido,Transport,151.29,UPI,Expense
+T0444,2026-05-21,Housing Society Maintenance - Rent & Housing,Housing Society Maintenance,Rent & Housing,1855.81,Bank Transfer,Expense
+T0479,2026-05-21,Apollo Pharmacy - Health & Fitness,Apollo Pharmacy,Health & Fitness,1238.23,Card,Expense
+T0475,2026-05-23,Flipkart - Shopping,Flipkart,Shopping,446.53,Card,Expense
+T0442,2026-05-23,Spotify - Entertainment,Spotify,Entertainment,124.74,UPI,Expense
+T0476,2026-05-24,Spotify - Entertainment,Spotify,Entertainment,354.09,UPI,Expense
+T0484,2026-05-27,Local Spa - Personal Care,Local Spa,Personal Care,760.99,UPI,Expense
+T0462,2026-05-27,Uber - Transport,Uber,Transport,161.98,Cash,Expense
+T0443,2026-05-27,Landlord - Monthly Rent - Rent & Housing,Landlord - Monthly Rent,Rent & Housing,12355.19,Bank Transfer,Expense
+T0464,2026-05-27,Ola - Transport,Ola,Transport,139.47,UPI,Expense
+T0490,2026-06-01,Broadband ISP - Bills & Utilities,Broadband ISP,Bills & Utilities,821.99,UPI,Expense
+T0535,2026-06-01,Nykaa - Personal Care,Nykaa,Personal Care,813.55,UPI,Expense
+T0485,2026-06-01,Monthly Salary,Employer Payroll,Income,48165.92,Bank Transfer,Income
+T0533,2026-06-02,Nykaa - Personal Care,Nykaa,Personal Care,397.79,Cash,Expense
+T0515,2026-06-02,Ola - Transport,Ola,Transport,96.17,Card,Expense
+T0505,2026-06-03,Metro Card - Transport,Metro Card,Transport,125.67,UPI,Expense
+T0534,2026-06-03,Local Spa - Personal Care,Local Spa,Personal Care,632.29,Cash,Expense
+T0511,2026-06-03,Petrol Pump - Transport,Petrol Pump,Transport,54.66,UPI,Expense
+T0497,2026-06-04,Dominos - Food,Dominos,Food,174.31,Card,Expense
+T0521,2026-06-06,Amazon - Shopping,Amazon,Shopping,396.82,UPI,Expense
+T0504,2026-06-06,Zomato - Food,Zomato,Food,135.88,Cash,Expense
+T0508,2026-06-07,Uber - Transport,Uber,Transport,105.28,Card,Expense
+T0495,2026-06-07,Starbucks - Food,Starbucks,Food,618.58,Card,Expense
+T0509,2026-06-08,Rapido - Transport,Rapido,Transport,69.76,Card,Expense
+T0529,2026-06-09,Apollo Pharmacy - Health & Fitness,Apollo Pharmacy,Health & Fitness,1147.17,Cash,Expense
+T0518,2026-06-09,Metro Card - Transport,Metro Card,Transport,152.29,UPI,Expense
+T0503,2026-06-10,Zomato - Food,Zomato,Food,340.86,Card,Expense
+T0499,2026-06-10,Swiggy - Food,Swiggy,Food,135.27,Card,Expense
+T0525,2026-06-11,BookMyShow - Entertainment,BookMyShow,Entertainment,296.4,Card,Expense
+T0524,2026-06-11,YouTube Premium - Entertainment,YouTube Premium,Entertainment,785.55,UPI,Expense
+T0516,2026-06-13,Rapido - Transport,Rapido,Transport,190.77,Cash,Expense
+T0502,2026-06-13,Grocery Mart - Food,Grocery Mart,Food,92.69,Cash,Expense
+T0488,2026-06-13,Landlord - Monthly Rent - Rent & Housing,Landlord - Monthly Rent,Rent & Housing,11851.97,Bank Transfer,Expense
+T0512,2026-06-13,Petrol Pump - Transport,Petrol Pump,Transport,55.66,UPI,Expense
+T0494,2026-06-14,Dominos - Food,Dominos,Food,225.42,UPI,Expense
+T0493,2026-06-15,Swiggy - Food,Swiggy,Food,354.44,Card,Expense
+T0531,2026-06-15,IRCTC - Travel,IRCTC,Travel,4949.08,UPI,Expense
+T0506,2026-06-15,Uber - Transport,Uber,Transport,57.61,Card,Expense
+T0496,2026-06-16,Swiggy - Food,Swiggy,Food,156.31,Card,Expense
+T0491,2026-06-16,Mobile Recharge - Bills & Utilities,Mobile Recharge,Bills & Utilities,404.62,UPI,Expense
+T0498,2026-06-16,Dominos - Food,Dominos,Food,94.21,Cash,Expense
+T0489,2026-06-18,Housing Society Maintenance - Rent & Housing,Housing Society Maintenance,Rent & Housing,1787.63,Bank Transfer,Expense
+T0527,2026-06-18,Spotify - Entertainment,Spotify,Entertainment,227.7,UPI,Expense
+T0523,2026-06-19,Myntra - Shopping,Myntra,Shopping,965.22,UPI,Expense
+T0514,2026-06-19,Metro Card - Transport,Metro Card,Transport,594.63,Card,Expense
+T0520,2026-06-22,Metro Card - Transport,Metro Card,Transport,56.58,Card,Expense
+T0510,2026-06-22,Rapido - Transport,Rapido,Transport,495.94,Cash,Expense
+T0517,2026-06-22,Rapido - Transport,Rapido,Transport,566.27,UPI,Expense
+T0501,2026-06-23,Grocery Mart - Food,Grocery Mart,Food,255.93,Cash,Expense
+T0492,2026-06-23,Local Cafe - Food,Local Cafe,Food,85.44,Cash,Expense
+T0530,2026-06-24,Udemy - Education,Udemy,Education,917.88,UPI,Expense
+T0522,2026-06-24,Amazon - Shopping,Amazon,,792.42,UPI,Expense
+T0487,2026-06-24,Spotify - Entertainment,Spotify,Entertainment,117.26,UPI,Expense
+T0507,2026-06-24,Uber - Transport,Uber,Transport,106.25,UPI,Expense
+T0513,2026-06-24,Rapido - Transport,Rapido,Transport,368.32,Cash,Expense
+T0500,2026-06-25,Starbucks - Food,Starbucks,Food,122.43,Card,Expense
+T0532,2026-06-26,MakeMyTrip - Travel,MakeMyTrip,Travel,3194.94,UPI,Expense
+T0486,2026-06-26,Netflix - Entertainment,Netflix,Entertainment,680.18,Card,Expense
+T0526,2026-06-27,PVR Cinemas - Entertainment,PVR Cinemas,Entertainment,302.93,Card,Expense
+T0528,2026-06-27,Spotify - Entertainment,Spotify,Entertainment,255.99,UPI,Expense
+T0519,2026-06-27,Rapido - Transport,Rapido,Transport,117.38,Card,Expense
+T0536,2026-07-01,Monthly Salary,Employer Payroll,Income,47672.96,Bank Transfer,Income
+T0575,2026-07-04,Book Store - Education,Book Store,Education,1956.5,Card,Expense
+T0568,2026-07-04,Spotify - Entertainment,Spotify,Entertainment,644.17,Card,Expense
+T0544,2026-07-05,Local Cafe - Food,Local Cafe,Food,301.73,UPI,Expense
+T0564,2026-07-06,Myntra - Shopping,Myntra,Shopping,4422.0,Card,Expense
+T0558,2026-07-06,Metro Card - Transport,Metro Card,Transport,66.64,UPI,Expense
+T0552,2026-07-06,Grocery Mart - Food,Grocery Mart,Food,161.7,Cash,Expense
+T0537,2026-07-07,Netflix - Entertainment,Netflix,Entertainment,673.77,Card,Expense
+T0573,2026-07-08,Apollo Pharmacy - Health & Fitness,Apollo Pharmacy,Health & Fitness,195.57,Cash,Expense
+T0572,2026-07-08,Cult.fit Gym - Health & Fitness,Cult.fit Gym,Health & Fitness,255.54,Card,Expense
+T0543,2026-07-08,Starbucks - Food,Starbucks,Food,544.29,UPI,Expense
+T0567,2026-07-09,YouTube Premium - Entertainment,YouTube Premium,Entertainment,647.79,UPI,Expense
+T0566,2026-07-09,PVR Cinemas - Entertainment,PVR Cinemas,Entertainment,130.37,UPI,Expense
+T0542,2026-07-11,Mobile Recharge - Bills & Utilities,Mobile Recharge,Bills & Utilities,405.07,UPI,Expense
+T0556,2026-07-11,Petrol Pump - Transport,Petrol Pump,Transport,44.59,Card,Expense
+T0548,2026-07-11,Starbucks - Food,Starbucks,Food,263.52,UPI,Expense
+T0551,2026-07-12,Swiggy - Food,Swiggy,Food,571.68,UPI,Expense
+T0561,2026-07-12,Rapido - Transport,Rapido,Transport,49.78,Card,Expense
+T0563,2026-07-12,Amazon - Shopping,Amazon,Shopping,330.63,Card,Expense
+T0571,2026-07-13,MedPlus - Health & Fitness,MedPlus,Health & Fitness,2289.6,UPI,Expense
+T0559,2026-07-14,Ola - Transport,Ola,Transport,51.99,Card,Expense
+T0538,2026-07-14,Spotify - Entertainment,Spotify,Entertainment,119.86,UPI,Expense
+T0554,2026-07-15,Metro Card - Transport,Metro Card,Transport,259.25,Card,Expense
+T0577,2026-07-15,IRCTC - Travel,IRCTC,Travel,6044.77,UPI,Expense
+T0539,2026-07-16,Landlord - Monthly Rent - Rent & Housing,Landlord - Monthly Rent,Rent & Housing,11645.25,Bank Transfer,Expense
+T0549,2026-07-16,Dominos - Food,Dominos,Food,359.43,Cash,Expense
+T0555,2026-07-16,Uber - Transport,Uber,Transport,244.39,UPI,Expense
+T0557,2026-07-16,Metro Card - Transport,Metro Card,Transport,164.54,Cash,Expense
+T0576,2026-07-17,MakeMyTrip - Travel,MakeMyTrip,Travel,4541.45,Card,Expense
+T0562,2026-07-18,Rapido - Transport,Rapido,Transport,222.83,Cash,Expense
+T0553,2026-07-20,Rapido - Transport,Rapido,Transport,42.68,Cash,Expense
+T0540,2026-07-22,Housing Society Maintenance - Rent & Housing,Housing Society Maintenance,Rent & Housing,1793.62,Bank Transfer,Expense
+T0546,2026-07-23,Zomato - Food,Zomato,Food,348.11,Cash,Expense
+T0547,2026-07-24,Dominos - Food,Dominos,Food,102.74,Card,Expense
+T0574,2026-07-24,Udemy - Education,Udemy,Education,1893.25,UPI,Expense
+T0570,2026-07-24,Local Clinic - Health & Fitness,Local Clinic,Health & Fitness,458.62,Cash,Expense
+T0550,2026-07-25,Local Cafe - Food,Local Cafe,Food,199.84,UPI,Expense
+T0560,2026-07-26,Uber - Transport,Uber,Transport,357.67,Card,Expense
+T0569,2026-07-26,Netflix - Entertainment,Netflix,Entertainment,351.2,Card,Expense
+T0565,2026-07-26,Local Mall - Shopping,Local Mall,Shopping,2028.63,Card,Expense
+T0545,2026-07-27,Swiggy - Food,Swiggy,Food,664.65,Cash,Expense
+T0541,2026-07-27,Broadband ISP - Bills & Utilities,Broadband ISP,Bills & Utilities,831.2,UPI,Expense
+T0578,2026-07-27,Nykaa - Personal Care,Nykaa,Personal Care,498.05,Cash,Expense
+`;

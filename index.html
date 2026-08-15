@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SmartSpend AI — Personal Finance Intelligence</title>
+<meta name="description" content="Upload your transactions and see where your money goes — spending analysis, unusual-transaction detection, forecasts, budgets, and a financial health score, all in your browser.">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- ============================================================ HEADER / NAV ============================================================ -->
+<header class="topbar">
+  <div class="topbar-inner">
+    <div class="brand">
+      <span class="brand-mark">§</span>
+      <span class="brand-name">SmartSpend<span class="brand-ai">AI</span></span>
+    </div>
+    <nav id="mainNav" class="main-nav hidden">
+      <button class="nav-item active" data-page="dashboard">Ledger</button>
+      <button class="nav-item" data-page="transactions">Entries</button>
+      <button class="nav-item" data-page="analysis">Analysis</button>
+      <button class="nav-item" data-page="anomalies">Unusual</button>
+      <button class="nav-item" data-page="forecast">Forecast</button>
+      <button class="nav-item" data-page="budget">Budget</button>
+      <button class="nav-item" data-page="insights">Insights</button>
+      <button class="nav-item" data-page="reports">Reports</button>
+    </nav>
+    <div class="topbar-actions">
+      <span id="loadedBadge" class="loaded-badge hidden"></span>
+      <button id="loadDifferentBtn" class="btn-ghost hidden">Load different file</button>
+    </div>
+  </div>
+</header>
+
+<!-- ============================================================ HOME / UPLOAD PAGE ============================================================ -->
+<main id="page-home" class="page">
+  <section class="hero">
+    <div class="hero-inner">
+      <p class="eyebrow">A ledger that reads itself</p>
+      <h1 class="hero-title">Every rupee, <em>accounted for.</em></h1>
+      <p class="hero-sub">Upload a transaction file and SmartSpend AI cleans it, analyzes it, and tells you what
+        it found — spending patterns, unusual charges, a forecast, and a financial health score. Nothing leaves
+        your browser.</p>
+
+      <div class="ledger-tape" aria-hidden="true">
+        <div class="ledger-tape-track" id="ledgerTapeTrack"><!-- populated by JS with demo-preview lines --></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="intake">
+    <div class="intake-grid">
+      <div class="intake-card">
+        <h2 class="intake-title"><span class="intake-num">01</span>Upload your data</h2>
+        <p class="intake-desc">CSV or Excel (.xlsx). We'll try to detect your Date, Amount, and Category columns
+          automatically — you can correct the mapping if we get it wrong.</p>
+        <label class="dropzone" id="dropzone" for="fileInput">
+          <input type="file" id="fileInput" accept=".csv,.xlsx,.xls" hidden>
+          <span class="dropzone-icon">↥</span>
+          <span class="dropzone-text"><strong>Choose a file</strong> or drag it here</span>
+          <span class="dropzone-hint">.csv, .xlsx, .xls</span>
+        </label>
+        <div id="fileError" class="alert alert-error hidden"></div>
+      </div>
+
+      <div class="intake-card intake-card-alt">
+        <h2 class="intake-title"><span class="intake-num">02</span>...or try the demo book</h2>
+        <p class="intake-desc">No file handy? Explore a realistic 12-month sample ledger — salary, rent,
+          subscriptions, and everyday spending across ten categories.</p>
+        <button id="demoBtn" class="btn-primary btn-demo">Open demo ledger</button>
+        <p class="intake-footnote">579 entries · Aug 2025 – Jul 2026 · includes a few messy rows on purpose,
+          so you can see the cleaning step do real work.</p>
+      </div>
+    </div>
+
+    <!-- Column mapping (shown only when needed) -->
+    <div id="mappingPanel" class="mapping-panel hidden">
+      <h3>Confirm column mapping</h3>
+      <p class="mapping-hint">We matched what we could. Please confirm or correct the rest before we analyze your
+        data.</p>
+      <div id="mappingFields" class="mapping-fields"></div>
+      <button id="confirmMappingBtn" class="btn-primary">Confirm &amp; analyze</button>
+    </div>
+
+    <!-- Data quality report -->
+    <div id="qualityPanel" class="quality-panel hidden">
+      <h3>Data quality</h3>
+      <ul id="qualityList" class="quality-list"></ul>
+      <details id="cleaningDetails" class="cleaning-details hidden">
+        <summary>See cleaning steps applied</summary>
+        <ul id="cleaningStepsList"></ul>
+      </details>
+    </div>
+  </section>
+
+  <footer class="home-footer">
+    <p>SmartSpend AI is an analytical tool for personal use. It does not constitute professional financial
+      advice, and nothing you upload is sent anywhere — all analysis runs locally in this browser tab.</p>
+  </footer>
+</main>
+
+<!-- ============================================================ APP PAGES (shown once data is loaded) ============================================================ -->
+<main id="page-app" class="page hidden">
+
+  <!-- ---------- DASHBOARD ---------- -->
+  <section id="view-dashboard" class="view">
+    <h1 class="view-title">Ledger <span class="view-title-accent">overview</span></h1>
+    <div id="kpiGrid" class="kpi-grid"></div>
+    <div class="chart-grid">
+      <div class="chart-card"><h3>Monthly spending trend</h3><canvas id="chartMonthlyTrend"></canvas></div>
+      <div class="chart-card"><h3>Spending by category</h3><canvas id="chartCategoryPie"></canvas></div>
+      <div class="chart-card"><h3>Spending by month</h3><canvas id="chartMonthlyBar"></canvas></div>
+      <div class="chart-card"><h3>Weekday vs weekend</h3><canvas id="chartWeekdayWeekend"></canvas></div>
+      <div class="chart-card"><h3>Payment method</h3><canvas id="chartPaymentMethod"></canvas></div>
+      <div class="chart-card"><h3>Top merchants</h3><canvas id="chartTopMerchants"></canvas></div>
+      <div class="chart-card chart-card-wide"><h3>Spending distribution</h3><canvas id="chartHistogram"></canvas></div>
+    </div>
+  </section>
+
+  <!-- ---------- TRANSACTIONS ---------- -->
+  <section id="view-transactions" class="view hidden">
+    <h1 class="view-title">Every <span class="view-title-accent">entry</span></h1>
+    <div class="filter-bar">
+      <div class="filter-field">
+        <label>From</label>
+        <input type="date" id="filterDateFrom">
+      </div>
+      <div class="filter-field">
+        <label>To</label>
+        <input type="date" id="filterDateTo">
+      </div>
+      <div class="filter-field filter-field-wide">
+        <label>Category</label>
+        <select id="filterCategory" multiple></select>
+      </div>
+      <div class="filter-field filter-field-wide">
+        <label>Merchant</label>
+        <select id="filterMerchant" multiple></select>
+      </div>
+      <div class="filter-field filter-field-wide">
+        <label>Payment method</label>
+        <select id="filterPayment" multiple></select>
+      </div>
+      <div class="filter-field filter-field-wide">
+        <label>Amount range: <span id="amountRangeLabel"></span></label>
+        <input type="range" id="filterAmountMin" min="0" max="100" value="0">
+        <input type="range" id="filterAmountMax" min="0" max="100" value="100">
+      </div>
+      <button id="resetFiltersBtn" class="btn-ghost">Reset</button>
+    </div>
+    <p id="filterCount" class="filter-count"></p>
+    <div class="table-wrap">
+      <table id="txnTable" class="ledger-table">
+        <thead><tr>
+          <th>ID</th><th>Date</th><th>Merchant</th><th>Category</th><th class="num">Amount</th>
+          <th>Payment</th><th>Type</th><th>Flag</th>
+        </tr></thead>
+        <tbody id="txnTableBody"></tbody>
+      </table>
+    </div>
+    <button id="downloadCsvBtn" class="btn-primary">Download filtered (CSV)</button>
+  </section>
+
+  <!-- ---------- SPENDING ANALYSIS ---------- -->
+  <section id="view-analysis" class="view hidden">
+    <h1 class="view-title">Spending <span class="view-title-accent">analysis</span></h1>
+    <div class="tabs" id="analysisTabs">
+      <button class="tab-btn active" data-tab="category">Category</button>
+      <button class="tab-btn" data-tab="merchant">Merchant</button>
+      <button class="tab-btn" data-tab="time">Time patterns</button>
+      <button class="tab-btn" data-tab="trend">Trends</button>
+    </div>
+    <div id="tab-category" class="tab-panel"></div>
+    <div id="tab-merchant" class="tab-panel hidden"></div>
+    <div id="tab-time" class="tab-panel hidden"></div>
+    <div id="tab-trend" class="tab-panel hidden"></div>
+  </section>
+
+  <!-- ---------- ANOMALIES ---------- -->
+  <section id="view-anomalies" class="view hidden">
+    <h1 class="view-title">Unusual <span class="view-title-accent">spending</span></h1>
+    <p class="view-note">Flags transactions that differ significantly from your typical spending — using IQR and
+      Z-score, computed per category. This is <strong>unusual spending</strong>, not a fraud determination.</p>
+    <div id="anomalyKpis" class="kpi-grid kpi-grid-3"></div>
+    <div id="anomalyCards" class="anomaly-cards"></div>
+    <h2 class="section-subtitle">All unusual transactions</h2>
+    <div class="table-wrap">
+      <table id="anomalyTable" class="ledger-table">
+        <thead><tr><th>ID</th><th>Date</th><th>Merchant</th><th>Category</th><th class="num">Amount</th><th class="num">Z-score</th></tr></thead>
+        <tbody id="anomalyTableBody"></tbody>
+      </table>
+    </div>
+    <h2 class="section-subtitle">Recurring expenses</h2>
+    <div id="recurringPanel"></div>
+  </section>
+
+  <!-- ---------- FORECAST ---------- -->
+  <section id="view-forecast" class="view hidden">
+    <h1 class="view-title">Spending <span class="view-title-accent">forecast</span></h1>
+    <p class="view-note">A moving average blended with a linear trend on your monthly totals. This is an
+      <strong>estimate</strong>, not a guaranteed prediction.</p>
+    <div id="forecastContent"></div>
+  </section>
+
+  <!-- ---------- BUDGET ---------- -->
+  <section id="view-budget" class="view hidden">
+    <h1 class="view-title">Budget <span class="view-title-accent">analysis</span></h1>
+    <div id="budgetRecommendations"></div>
+    <h2 class="section-subtitle">Set your budget</h2>
+    <div class="budget-form">
+      <label class="budget-income-label">Monthly income (₹)
+        <input type="number" id="monthlyIncomeInput" min="0" step="500" placeholder="0">
+      </label>
+      <div id="budgetCategoryInputs" class="budget-category-grid"></div>
+    </div>
+    <div id="budgetComparison"></div>
+  </section>
+
+  <!-- ---------- INSIGHTS ---------- -->
+  <section id="view-insights" class="view hidden">
+    <h1 class="view-title">Smart <span class="view-title-accent">insights</span></h1>
+    <div class="score-panel">
+      <p class="view-note">This is a project-specific analytical indicator based on your spending and savings
+        behavior. It is <strong>not</strong> an official credit score or professional financial advice.</p>
+      <div class="score-panel-inner">
+        <div class="score-dial" id="scoreDial">
+          <span id="scoreValue">—</span>
+          <span class="score-max">/ 100</span>
+        </div>
+        <div id="scoreBreakdown" class="score-breakdown"></div>
+      </div>
+    </div>
+    <h2 class="section-subtitle">Insights</h2>
+    <div id="insightsList" class="insight-list"></div>
+    <h2 class="section-subtitle">Recommendations</h2>
+    <div id="recommendationsList" class="insight-list insight-list-rec"></div>
+  </section>
+
+  <!-- ---------- REPORTS ---------- -->
+  <section id="view-reports" class="view hidden">
+    <h1 class="view-title">Download <span class="view-title-accent">report</span></h1>
+    <p class="view-note">Generate a 9-sheet Excel workbook covering the executive summary, cleaned transactions,
+      spending analysis, category analysis, anomalies, forecast, budget analysis, smart insights, and a data
+      dictionary — built entirely in this browser tab.</p>
+    <button id="generateReportBtn" class="btn-primary">Generate Excel report</button>
+    <div id="reportPreview" class="report-preview"></div>
+  </section>
+
+</main>
+
+<footer class="site-footer">
+  <p>SmartSpend AI · runs entirely in your browser · no data is uploaded to any server</p>
+</footer>
+
+<!-- CDN libraries: charts + spreadsheet export/import. All analysis logic runs locally either way. -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+
+<script src="engine.js"></script>
+<script src="demo_data.js"></script>
+<script src="report.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
